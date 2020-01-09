@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">TestRecycleViewCardView</string>
+    <string name="location_address">Location Address</string>
+    <string name="location_name">Location Name</string>
+    <string name="location_image">Location Image</string>
+    <string name="location_operation">Operation</string>
+</resources>
