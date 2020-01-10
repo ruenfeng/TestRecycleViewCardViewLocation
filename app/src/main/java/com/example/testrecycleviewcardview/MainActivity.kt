@@ -1,15 +1,17 @@
 package com.example.testrecycleviewcardview
 
 import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.ChangeEventListener
 import com.firebase.ui.database.FirebaseRecyclerAdapter
-
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.location_layout.view.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -17,15 +19,13 @@ class MainActivity : AppCompatActivity() {
     private val TAG = "MainActivity"
     private val REQUIRED = "Required"
 
-
-
     //access database table
     private var locationDatabase: DatabaseReference? = null
     //to get the current database pointer
     private var locationReference: DatabaseReference? = null
     private var locationListener: ChildEventListener? = null
 
-    //no need for non-recycler view
+    //no need
     private var locationAdapter: FirebaseRecyclerAdapter<Location, LocationViewHolder>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,15 +40,19 @@ class MainActivity : AppCompatActivity() {
         firebaseListenerInit()
         locationRecycleView.layoutManager = LinearLayoutManager(this)
         val query = locationReference!!.limitToLast(8)
-
-        locationAdapter = object: FirebaseRecyclerAdapter<Location, LocationViewHolder>(Location::class.java, R.layout.location_layout, LocationViewHolder::class.java,query)
-        {
+        locationAdapter = object: FirebaseRecyclerAdapter<Location, LocationViewHolder>(
+            Location::class.java, R.layout.location_layout, LocationViewHolder::class.java,query
+        ){
             override fun populateViewHolder(viewHolder: LocationViewHolder?, model: Location?, position: Int) {
                 viewHolder!!.bindLocation(model)
-
             }
 
-            override fun onChildChanged(type: ChangeEventListener.EventType?, snapshot: DataSnapshot?, index: Int, oldIndex: Int) {
+            override fun onChildChanged(
+                type: ChangeEventListener.EventType?,
+                snapshot: DataSnapshot?,
+                index: Int,
+                oldIndex: Int
+            ) {
                 super.onChildChanged(type, snapshot, index, oldIndex)
                 locationRecycleView.scrollToPosition(index)
             }
@@ -59,10 +63,15 @@ class MainActivity : AppCompatActivity() {
                 payloads: MutableList<Any>
             ) {
                 super.onBindViewHolder(holder, position, payloads)
+                val address: String = holder.itemView.textViewLocationAddress.text.toString()
 
+                holder.itemView.textViewLocationAddress.setOnClickListener{
+
+                    val intent = Intent(ACTION_VIEW, Uri.parse("geo:0,0?q=$address"))
+                    startActivity(intent)
+                }
             }
         }
-
         locationRecycleView.adapter = locationAdapter
 
         fabAddLocation.setOnClickListener{
@@ -118,7 +127,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
         locationAdapter!!.cleanup()
     }
 }

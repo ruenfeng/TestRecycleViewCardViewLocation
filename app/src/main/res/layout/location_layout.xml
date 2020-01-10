@@ -15,8 +15,8 @@
 
         <ImageView
             android:id="@+id/imageViewLocation"
-            android:layout_width="100dp"
-            android:layout_height="50dp"
+            android:layout_width="140dp"
+            android:layout_height="70dp"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"
@@ -60,7 +60,6 @@
             android:id="@+id/textViewOperation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:text="@string/location_operation"
             app:autoSizeTextType="uniform"
             app:layout_constraintBottom_toBottomOf="@+id/imageViewLocation"

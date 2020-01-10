@@ -8,12 +8,14 @@ import kotlinx.android.synthetic.main.location_layout.view.*
 
 class LocationViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
 
+
     fun bindLocation(location:Location?){
         with(location!!){
-            itemView.textViewLocationName.setText(locationName)
-            itemView.textViewLocationAddress.setText(locationAddress)
+            itemView.textViewLocationName.text = locationName
+            itemView.textViewLocationAddress.text = locationAddress
             Picasso.get().load(locationImage).into(itemView.imageViewLocation)
-            itemView.textViewOperation.setText(locationOperation)
+            itemView.textViewOperation.text = locationOperation
         }
     }
+
 }
