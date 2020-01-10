@@ -4,4 +4,8 @@
     <string name="location_name">Location Name</string>
     <string name="location_image">Location Image</string>
     <string name="location_operation">Operation</string>
+    <string name="locationName">Location Name</string>
+    <string name="locationAddress">Location Address</string>
+    <string name="locationOperation">Operation Day and Time</string>
+    <string name="save">Save</string>
 </resources>

@@ -23,6 +23,12 @@ class Location{
         this.locationOperation = operation
     }
 
+    constructor(locationName: String?, locationAddress: String?, locationOperation: String?) {
+        this.locationName = locationName
+        this.locationAddress = locationAddress
+        this.locationOperation = locationOperation
+    }
+
     @Exclude
     fun toMap():Map<String,Any>{
         val result = HashMap<String, Any>()

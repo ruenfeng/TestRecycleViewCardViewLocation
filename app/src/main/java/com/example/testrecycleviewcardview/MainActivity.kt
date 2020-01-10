@@ -1,11 +1,13 @@
 package com.example.testrecycleviewcardview
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.firebase.ui.database.ChangeEventListener
 import com.firebase.ui.database.FirebaseRecyclerAdapter
+
 import com.google.firebase.database.*
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -23,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var locationReference: DatabaseReference? = null
     private var locationListener: ChildEventListener? = null
 
-    //no need
+    //no need for non-recycler view
     private var locationAdapter: FirebaseRecyclerAdapter<Location, LocationViewHolder>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,25 +40,36 @@ class MainActivity : AppCompatActivity() {
         firebaseListenerInit()
         locationRecycleView.layoutManager = LinearLayoutManager(this)
         val query = locationReference!!.limitToLast(8)
-        locationAdapter = object: FirebaseRecyclerAdapter<Location, LocationViewHolder>(
-            Location::class.java, R.layout.location_layout, LocationViewHolder::class.java,query
-        ){
+
+        locationAdapter = object: FirebaseRecyclerAdapter<Location, LocationViewHolder>(Location::class.java, R.layout.location_layout, LocationViewHolder::class.java,query)
+        {
             override fun populateViewHolder(viewHolder: LocationViewHolder?, model: Location?, position: Int) {
                 viewHolder!!.bindLocation(model)
+
             }
 
-            override fun onChildChanged(
-                type: ChangeEventListener.EventType?,
-                snapshot: DataSnapshot?,
-                index: Int,
-                oldIndex: Int
-            ) {
+            override fun onChildChanged(type: ChangeEventListener.EventType?, snapshot: DataSnapshot?, index: Int, oldIndex: Int) {
                 super.onChildChanged(type, snapshot, index, oldIndex)
                 locationRecycleView.scrollToPosition(index)
             }
+
+            override fun onBindViewHolder(
+                holder: LocationViewHolder,
+                position: Int,
+                payloads: MutableList<Any>
+            ) {
+                super.onBindViewHolder(holder, position, payloads)
+
+            }
         }
+
         locationRecycleView.adapter = locationAdapter
 
+        fabAddLocation.setOnClickListener{
+            val intent = Intent(this, AddLocation::class.java)
+
+            startActivity(intent)
+        }
     }
 
     private fun firebaseListenerInit() {
@@ -107,20 +120,5 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
 
         locationAdapter!!.cleanup()
-    }
-    private fun addNewLocation(){
-        val location = Location("IPC"
-            , "Jln. SS22/47, SL 47400, Damansara Jaya"
-            ,"https://firebasestorage.googleapis.com/v0/b/greenurth-1dee5.appspot.com/o/ikano-power-center-recycle-center.jpg?alt=media&token=dc972945-4333-417b-badd-0efe9723cdcd"
-            ,"Sunday 10AM - 12PM")
-
-        val locationValues = location.toMap()
-        val childUpdates = HashMap<String, Any>()
-
-        val key = locationDatabase!!.child("location").push().key
-
-        childUpdates.put("/location/" + key, locationValues)
-
-        locationDatabase!!.updateChildren(childUpdates)
     }
 }
